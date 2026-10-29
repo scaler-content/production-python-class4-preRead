@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Class 4 Pre-Read</title>
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #faf6ef; --card: #fffdf9; --text: #2e2820; --muted: #6e6455;
+    --accent: #b4532a; --accent-soft: #f8ebe0; --border: #e8dfd0;
+    --code-bg: #f4eee2; --code-text: #2e2820;
+    --ok: #2f7a47; --ok-soft: #e8f2e3; --warn: #94590a; --warn-soft: #fbeed0;
+    --bad: #b3261e; --bad-soft: #fbe6e1; --shadow: 0 1px 3px rgba(80,55,20,.10);
+  }
+  
+    * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 118px; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6; font-size: 17px;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 18px 80px; }
+  header.hero { padding: 38px 0 18px; }
+  .kicker { color: var(--accent); font-weight: 700; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; }
+  h1 { font-size: 34px; line-height: 1.2; margin: 6px 0 10px; }
+  .lead { color: var(--muted); font-size: 18px; margin: 0 0 12px; }
+  .pills { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+  .pill { background: var(--accent-soft); color: var(--accent); border-radius: 999px; padding: 4px 12px; font-size: 14px; font-weight: 600; }
+
+  .topbar {
+    position: sticky; top: 0; z-index: 20; background: var(--bg);
+    border-bottom: 1px solid var(--border); padding: 8px 0 8px;
+  }
+  .topbar .wrap { padding-bottom: 0; }
+  .progress { height: 8px; background: var(--border); border-radius: 99px; overflow: hidden; margin-bottom: 8px; }
+  .progress > div { height: 100%; width: 0; background: var(--ok); transition: width .3s ease; }
+  nav { display: flex; gap: 6px; flex-wrap: wrap; font-size: 14px; }
+  nav a {
+    text-decoration: none; color: var(--muted); padding: 3px 10px; border-radius: 99px;
+    border: 1px solid var(--border); background: var(--card);
+  }
+  nav a:hover { color: var(--accent); border-color: var(--accent); }
+  nav a.done { color: var(--ok); border-color: var(--ok); }
+  .pct { font-size: 13px; color: var(--muted); margin: 0 0 6px; }
+
+  section.card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+    padding: 22px 24px; margin: 22px 0; box-shadow: var(--shadow);
+  }
+  section.card h2 { font-size: 25px; margin: 0 0 4px; line-height: 1.25; }
+  .num { color: var(--accent); }
+  h3 { font-size: 19px; margin: 26px 0 6px; }
+  p { margin: 8px 0; }
+  ul, ol { padding-left: 22px; margin: 8px 0; }
+  li { margin: 4px 0; }
+  .muted { color: var(--muted); }
+  .small { font-size: 14px; }
+
+  .callout { border-radius: 10px; padding: 12px 16px; margin: 14px 0; border-left: 5px solid; }
+  .callout.tip { background: var(--accent-soft); border-color: var(--accent); }
+  .callout.warn { background: var(--warn-soft); border-color: var(--warn); }
+  .callout.ok { background: var(--ok-soft); border-color: var(--ok); }
+  .callout strong.t { display: block; margin-bottom: 2px; }
+
+  code, pre, .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
+  code { background: var(--code-bg); padding: 1px 6px; border-radius: 5px; font-size: .92em; }
+  .codeblock { position: relative; margin: 12px 0; }
+  .codeblock pre {
+    margin: 0; background: var(--code-bg); color: var(--code-text); border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px 16px; overflow-x: auto; font-size: 15px; line-height: 1.5;
+  }
+  .codeblock .label { font-size: 13px; color: var(--muted); margin-bottom: 4px; font-weight: 600; }
+  .copy {
+    position: absolute; top: 8px; right: 8px; font-size: 12px; padding: 3px 9px; border-radius: 6px;
+    border: 1px solid var(--border); background: var(--card); color: var(--muted); cursor: pointer;
+  }
+  .copy:hover { color: var(--accent); border-color: var(--accent); }
+  .placeholder {
+    background: var(--warn-soft); color: var(--warn); border: 1px dashed var(--warn);
+    padding: 0 6px; border-radius: 5px; font-weight: 600; white-space: nowrap;
+  }
+
+  table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: 15px; }
+  th, td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; vertical-align: top; }
+  th { background: var(--accent-soft); color: var(--accent); }
+  .tablewrap { overflow-x: auto; }
+
+  /* tabs */
+  .tabs { margin: 14px 0; }
+  .tablist { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+  .tablist button {
+    font: inherit; font-size: 15px; font-weight: 600; padding: 7px 16px; border-radius: 99px; cursor: pointer;
+    border: 1px solid var(--border); background: var(--card); color: var(--muted);
+  }
+  .tablist button[aria-selected="true"] { background: var(--accent); color: #fff; border-color: var(--accent); }
+  
+  .tabpanel { display: none; }
+  .tabpanel.active { display: block; }
+  .steps { counter-reset: s; list-style: none; padding-left: 0; }
+  .steps li { counter-increment: s; position: relative; padding-left: 38px; margin: 10px 0; }
+  .steps li::before {
+    content: counter(s); position: absolute; left: 0; top: 0; width: 26px; height: 26px; border-radius: 50%;
+    background: var(--accent); color: #fff; font-weight: 700; font-size: 14px; display: grid; place-items: center;
+  }
+  
+
+  /* diagrams */
+  .flow { display: flex; flex-wrap: wrap; gap: 8px; align-items: stretch; margin: 14px 0; }
+  .flow .box {
+    flex: 1 1 150px; border: 2px solid var(--accent); border-radius: 12px; padding: 10px 12px; background: var(--accent-soft);
+  }
+  .flow .box b { display: block; color: var(--accent); font-size: 18px; }
+  .flow .arrow { align-self: center; font-size: 22px; color: var(--accent); }
+
+  .anatomy { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; font-family: ui-monospace, Menlo, Consolas, monospace; }
+  .anatomy span { padding: 6px 10px; border-radius: 8px; font-size: 15px; }
+  .a-prompt { background: #3b4a6b; color: #fff; }
+  .a-cmd { background: #1f7a3a; color: #fff; }
+  .a-out { background: var(--code-bg); border: 1px solid var(--border); color: var(--code-text); }
+  .legend { font-size: 14px; color: var(--muted); }
+
+  .tasks { list-style: none; padding: 0; margin: 10px 0; }
+  .tasks li { padding: 6px 10px; border: 1px solid var(--border); border-radius: 8px; margin: 6px 0; display: flex; gap: 10px; align-items: center; background: var(--card); }
+  .tasks li .ck { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--border); display: grid; place-items: center; font-size: 13px; flex: none; }
+  .tasks li.done { background: var(--ok-soft); border-color: var(--ok); }
+  .tasks li.done .ck { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .btn {
+    font: inherit; font-size: 15px; font-weight: 600; padding: 8px 16px; border-radius: 10px; cursor: pointer;
+    border: 1px solid var(--accent); background: var(--accent); color: #fff;
+  }
+  
+  .btn.ghost { background: transparent; color: var(--accent); }
+  .btnrow { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0; }
+  .hint { min-height: 24px; font-size: 15px; margin: 6px 0; }
+  .hint.good { color: var(--ok); } .hint.bad { color: var(--bad); }
+
+  /* chips / cards */
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; }
+  .chip {
+    font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 16px; padding: 7px 14px; border-radius: 10px; cursor: pointer;
+    border: 1px solid var(--border); background: var(--card); color: var(--text);
+  }
+  .chip[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+  .readout { background: var(--code-bg); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; min-height: 64px; }
+  .twocol { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 680px) { .twocol { grid-template-columns: 1fr; } }
+  .panel { border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; background: var(--card); }
+  .panel h4 { margin: 0 0 6px; font-size: 15px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+  .cardgrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  @media (max-width: 680px) { .cardgrid { grid-template-columns: 1fr; } }
+
+  /* quiz */
+  .quiz .q { border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; margin: 12px 0; background: var(--card); }
+  .quiz .q p.qt { margin: 0 0 8px; font-weight: 600; }
+  .quiz .opt {
+    display: block; width: 100%; text-align: left; font: inherit; font-size: 16px; padding: 8px 12px; margin: 6px 0; cursor: pointer;
+    border-radius: 8px; border: 1px solid var(--border); background: var(--card); color: var(--text);
+  }
+  .quiz .opt:hover:not(:disabled) { border-color: var(--accent); }
+  .quiz .opt.right { background: var(--ok-soft); border-color: var(--ok); }
+  .quiz .opt.wrong { background: var(--bad-soft); border-color: var(--bad); }
+  .quiz .fb { font-size: 15px; margin-top: 6px; }
+  .score { font-size: 20px; font-weight: 700; margin: 10px 0; }
+
+  .donebar { display: flex; align-items: center; gap: 12px; margin-top: 18px; padding-top: 14px; border-top: 1px dashed var(--border); flex-wrap: wrap; }
+  .donebtn {
+    font: inherit; font-size: 15px; font-weight: 600; padding: 7px 14px; border-radius: 99px; cursor: pointer;
+    border: 1px solid var(--ok); color: var(--ok); background: transparent;
+  }
+  .donebtn[aria-pressed="true"] { background: var(--ok); color: #fff; }
+  
+  footer { text-align: center; color: var(--muted); font-size: 14px; margin-top: 30px; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+  /* ---- additions for Class 2 ---- */
+  /* sorter */
+  .sorter { margin: 14px 0; }
+  .sorter .pool { display: flex; gap: 8px; flex-wrap: wrap; min-height: 44px; padding: 10px; border: 1px dashed var(--border); border-radius: 10px; background: var(--card); }
+  .sorter .pool .chip { font-size: 15px; }
+  .sorter .pool .empty { color: var(--ok); font-weight: 600; }
+  .sorter .bins { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
+  .sorter .bins.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (max-width: 680px) { .sorter .bins, .sorter .bins.two { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 420px) { .sorter .bins, .sorter .bins.two { grid-template-columns: 1fr; } }
+  .sorter .bin {
+    font: inherit; text-align: left; cursor: pointer; border: 2px solid var(--border); border-radius: 12px; padding: 10px 12px;
+    background: var(--card); color: var(--text); min-height: 84px;
+  }
+  .sorter .bin:hover { border-color: var(--accent); }
+  .sorter .bin b { display: block; color: var(--accent); font-size: 16px; margin-bottom: 2px; }
+  .sorter .bin .why { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+  .sorter .bin .placed { display: flex; flex-wrap: wrap; gap: 4px; }
+  .sorter .bin .placed span { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 13px; background: var(--ok-soft); border: 1px solid var(--ok); color: var(--ok); border-radius: 6px; padding: 0 6px; }
+  .sorter .bin.flash { border-color: var(--bad); background: var(--bad-soft); }
+  .chip.sel { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+
+  /* folder explorer */
+  .explorer { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: 12px; }
+  @media (max-width: 680px) { .explorer { grid-template-columns: 1fr; } }
+  .explorer .tree button {
+    display: block; width: 100%; text-align: left; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 15px;
+    background: transparent; border: none; padding: 5px 8px; border-radius: 8px; cursor: pointer; color: var(--text);
+  }
+  .explorer .tree button.f { color: var(--accent); font-weight: 600; }
+  .explorer .tree button[aria-pressed="true"] { background: var(--accent-soft); }
+  .explorer .tree .ind { padding-left: 22px; }
+  .explorer .tree .dim { color: var(--muted); font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 14px; padding: 2px 8px 2px 30px; }
+
+  /* layers */
+  .layers .l { border-radius: 10px; padding: 10px 14px; margin: 6px 0; border: 1px solid var(--border); }
+  .layers .l1 { background: var(--ok-soft); border-color: var(--ok); }
+  .layers .l2 { background: var(--warn-soft); border-color: var(--warn); }
+  .layers .l3 { background: var(--accent-soft); border-color: var(--accent); }
+  .layers b { display: block; }
+
+  .tasks li { align-items: flex-start; }
+  .tasks li .tx { min-width: 0; overflow-wrap: anywhere; }
+  .tasks li .tx code { white-space: normal; }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="wrap">
+    <div class="progress" aria-hidden="true"><div id="bar"></div></div>
+    <p class="pct" id="pct">Progress: 0 of 8 sections marked done</p>
+    <nav id="nav" aria-label="Sections">
+      <a href="#s1" data-s="s1">1 Welcome</a>
+      <a href="#s2" data-s="s2">2 Big idea</a>
+      <a href="#s3" data-s="s3">3 Tools</a>
+      <a href="#s4" data-s="s4">4 Project</a>
+      <a href="#s5" data-s="s5">5 Failures</a>
+      <a href="#s6" data-s="s6">6 Counting</a>
+      <a href="#s7" data-s="s7">7 Retries and model</a>
+      <a href="#s8" data-s="s8">8 Check yourself</a>
+    </nav>
+  </div>
+</div>
+
+<div class="wrap">
+
+<header class="hero">
+  <div class="kicker">FDE Module 2 &middot; Pre-read for Class 4</div>
+  <h1>When the Data Fights Back</h1>
+  <p class="lead">Real files are messy. Class 4 teaches your project to survive a bad row, a missing file and a failing service, without losing a record or inventing an answer. Read this before class, then arrive with your tools ready.</p>
+  <div class="pills">
+    <span class="pill">About 40 minutes</span>
+    <span class="pill">Check your tools</span>
+    <span class="pill">Quick games and a short quiz</span>
+  </div>
+</header>
+
+<!-- ================= 1 WELCOME ================= -->
+<section class="card" id="s1">
+  <h2><span class="num">1.</span> Welcome</h2>
+  <p>In Class 3 your project became something a stranger can <strong>understand</strong>. In Class 4 it becomes something a stranger can <strong>trust</strong>. Today the program reads four files and prints <code>4 of 7 cases need attention</code>. That works while every file is perfect. Real files are not perfect: a date is written the wrong way, a file does not arrive, or a service takes too long to answer.</p>
+  <p>By the end of class you will have:</p>
+  <div class="cardgrid">
+    <div class="panel">
+      <h4>You will learn to</h4>
+      <ul>
+        <li>Handle problems with <strong>try, except, else and finally</strong></li>
+        <li>Give each kind of problem its own named error</li>
+        <li>Set bad rows aside in a <strong>quarantine</strong>, with a reason</li>
+        <li>Prove that every row is counted, and halt a bad batch</li>
+        <li>Make a rerun safe, and retry a failing call a limited number of times</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h4>You do not need to</h4>
+      <ul>
+        <li>Memorise any command. We type them together in class</li>
+        <li>Know what a hash or a regular expression is. We explain both</li>
+        <li>Have an API key. Every failure is tested without one</li>
+        <li>Install anything new. The tools from Class 3 are enough</li>
+        <li>Be good at Python yet. Short examples come first</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout tip"><strong class="t">How to use this page</strong>
+    Go in order. Section 3 is the one to finish <strong>before</strong> class, because it checks that your Class 3 project still runs. Click the small interactive boxes, since they help you remember. Press <em>Mark as done</em> at the end of each section. If a step fails, write down what you saw and tell your instructor. Please do not spend more than 15 minutes stuck on any one thing.
+  </div>
+  <div class="donebar"><button class="donebtn" data-done="s1" aria-pressed="false">Mark as done</button></div>
+</section>
+
+<!-- ================= 2 BIG IDEA ================= -->
+<section class="card" id="s2">
+  <h2><span class="num">2.</span> The big idea: a run that finishes is not a run you can trust</h2>
+  <p>Imagine a teacher who reads out 40 names, but one attendance card slipped under the desk. The register says 39 present. It looks complete, and nothing says <em>one card was not read</em>. A batch of data can behave the same way: it ends with no error, and still lost a row.</p>
+  <p>Here is a real line from the class files. The date is written day first, so the program cannot tell if it means 7 March or 3 July:</p>
+  <div class="codeblock"><div class="label">One row of the failure file</div><button class="copy">Copy</button><pre>C-3003,O-7003,SHIPPED,07/03/2025</pre></div>
+  <p>A careless program guesses, and the guess looks exactly like a fact in the report. A careful program <strong>sets the row aside with a reason</strong> and says so. Class 4 builds the careful one, and it keeps three promises.</p>
+
+  <h3>What can go wrong when data is messy?</h3>
+  <p>Click each item to see how it hurts, and how Class 4 fixes it.</p>
+  <div class="chips" id="hideChips">
+    <button class="chip" data-i="0" aria-pressed="false">A date that means two things</button>
+    <button class="chip" data-i="1" aria-pressed="false">A row that vanishes</button>
+    <button class="chip" data-i="2" aria-pressed="false">The same case twice</button>
+    <button class="chip" data-i="3" aria-pressed="false">A run started twice</button>
+    <button class="chip" data-i="4" aria-pressed="false">A model that is too slow</button>
+  </div>
+  <div class="readout" id="hideOut" aria-live="polite">Click an item above.</div>
+
+  <h3>The three promises of Class 4</h3>
+  <div class="flow" aria-label="Three promises">
+    <div class="box"><b>1. Every row counted</b>Accepted, or set aside with a reason</div><div class="arrow">&rarr;</div>
+    <div class="box"><b>2. Every failure planned</b>A row is set aside, a run halts, or a model answer is marked UNAVAILABLE</div><div class="arrow">&rarr;</div>
+    <div class="box"><b>3. A rerun repeats nothing</b>A finished batch is never done twice</div>
+  </div>
+
+  <div class="callout warn"><strong class="t">What we will not do in Class 4</strong>
+    There is no database, no scheduler and no dashboard. We do not cause real outages: timeouts and rate limits are simulated with fake callers, so everything runs on your laptop with no key.
+  </div>
+  <div class="donebar"><button class="donebtn" data-done="s2" aria-pressed="false">Mark as done</button></div>
+</section>
+
+<!-- ================= 3 TOOLS ================= -->
+<section class="card" id="s3">
+  <h2><span class="num">3.</span> Check your tools</h2>
+  <p>Most of the setup is in class. Before class you only need to confirm three things. Allow about 15 minutes.</p>
+  <div class="tablewrap">
+  <table>
+    <tr><th>What</th><th>Why it matters</th><th>Ready when</th></tr>
+    <tr><td><strong>Python</strong></td><td>Runs the program. The project is pinned to Python 3.11</td><td><span class="placeholder">3.11 or newer</span></td></tr>
+    <tr><td><strong>Your Class 3 project</strong></td><td>Class 4 builds on it, one file at a time</td><td>It runs and prints <code>4 of 7 cases need attention</code>, and <code>pytest</code> shows <code>26 passed</code></td></tr>
+    <tr><td><strong>Starter Files for Class 4</strong></td><td>Eight new files, including test stubs for you to finish in class</td><td>Downloaded from the link your instructor shares, and unzipped</td></tr>
+  </table>
+  </div>
+
+  <h3>3.1 Check Python</h3>
+  <p>Open a terminal and run the command for your system. The first one you try that works is the one to use.</p>
+  <div class="tabs" data-tabs="pyver">
+    <div class="tablist" role="tablist" aria-label="Operating system">
+      <button role="tab" aria-selected="true" data-tab="win">Windows</button>
+      <button role="tab" aria-selected="false" data-tab="mac">Mac and Linux</button>
+    </div>
+    <div class="tabpanel active" data-panel="win">
+      <div class="codeblock"><div class="label">Windows PowerShell</div><button class="copy">Copy</button><pre>py --version
+# You should see something like: Python 3.11.9</pre></div>
+    </div>
+    <div class="tabpanel" data-panel="mac">
+      <div class="codeblock"><div class="label">macOS or Linux</div><button class="copy">Copy</button><pre>python3 --version
+# You should see something like: Python 3.11.9</pre></div>
+    </div>
+  </div>
+  <p>If the number is 3.10 or lower, install a newer Python from <span class="placeholder"><a href="https://www.python.org/downloads/" style="text-decoration: none; color: inherit;">python.org/downloads/</a></span> before class. Tell your instructor if you cannot. On Windows, tick <strong>"Add python.exe to PATH"</strong> on the first screen of the installer.</p>
+
+  <h3>3.2 Check that your Class 3 project still runs</h3>
+  <p>Open your project folder in VS Code and make sure your virtual environment is active. On Windows use <code>py</code> instead of <code>python3</code> if <code>python</code> is not found.</p>
+  <div class="codeblock"><div class="label">From the project root, with the environment active</div><button class="copy">Copy</button><pre>python -m meridian_workbench
+# Expected: a line that says 4 of 7 cases need attention
+
+python -m pytest -q
+# Expected: a last line that says 26 passed</pre></div>
+
+  <h3>If something goes wrong</h3>
+  <div class="tablewrap">
+  <table>
+    <tr><th>What you see</th><th>Likely cause and fix</th></tr>
+    <tr><td>"Python was not found", or the version is 3.10 or lower</td><td>Install Python 3.11 or newer from python.org, then open a new terminal and check again.</td></tr>
+    <tr><td>The program fails with <code>ModuleNotFoundError</code></td><td>Your virtual environment is not active. Activate it, then run the program again.</td></tr>
+    <tr><td>The tests do not show <code>26 passed</code></td><td>Do not fix it alone. Tell your instructor which test failed, and bring the last line of the error.</td></tr>
+  </table>
+  </div>
+  <div class="donebar"><button class="donebtn" data-done="s3" aria-pressed="false">Mark as done</button></div>
+</section>
+
+<!-- ================= 4 PROJECT ================= -->
+<section class="card" id="s4">
+  <h2><span class="num">4.</span> Where the new pieces go</h2>
+  <p>Class 4 adds a few files to the Class 3 layout. Each one has one job. Click a folder to see what goes in it.</p>
+  <div class="explorer">
+    <div class="panel tree" id="treeBox">
+      <button class="f" data-d="root" aria-pressed="true">meridian-workbench/</button>
+      <div class="ind">
+        <button class="f" data-d="src" aria-pressed="false">src/meridian_workbench/</button>
+        <button class="f" data-d="tests" aria-pressed="false">tests/</button>
+        <button class="f" data-d="fixtures" aria-pressed="false">fixtures/</button>
+        <button class="f" data-d="golden" aria-pressed="false">golden/</button>
+        <button class="f" data-d="outputs" aria-pressed="false">outputs/</button>
+        <button data-d="files" aria-pressed="false">config/settings.toml, docs/ &hellip;</button>
+      </div>
+    </div>
+    <div class="panel"><h4 id="treeTitle">The whole project</h4><div id="treeText"></div></div>
+  </div>
+  <div class="callout tip"><strong class="t">Picture it</strong>
+    Class 3 gave every idea its own file. Class 4 does the same for the new ideas: one file for the problem names, one for careful reading, one for the batch checks, one for the batch identity and one for retries.
+  </div>
+  <div class="donebar"><button class="donebtn" data-done="s4" aria-pressed="false">Mark as done</button></div>
+</section>
+
+<!-- ================= 5 FAILURES ================= -->
+<section class="card" id="s5">
+  <h2><span class="num">5.</span> Four kinds of failure, four outcomes</h2>
+  <p>A problem with data is not one thing. If every problem is treated the same way, a program either stops too often or hides too much. So we sort problems into four kinds, and each kind gets its own planned outcome.</p>
+  <h3>Try it: which kind is it?</h3>
+  <p>Click an item, then click the kind it belongs to.</p>
+  <div class="sorter" id="sortKinds"></div>
+
+  <h3>Four words for reacting to a problem</h3>
+  <p>Python has four small words for this. Read the example from top to bottom, and notice what each word is for.</p>
+  <div class="codeblock"><div class="label">try, except, else and finally</div><button class="copy">Copy</button><pre>try:
+    promised = read_promised(row["promised_date"])   # the line that might fail
+except ValueError:
+    return "quarantined: promised_date is not a date"   # runs only on that error
+else:
+    return f"accepted, due {promised.isoformat()}"      # runs only if try succeeded
+finally:
+    print(f"checked {row['case_id']}")                  # runs every time</pre></div>
+  <div class="callout tip"><strong class="t">Making tea</strong>
+    Try: boil the water. Except: if the gas runs out, use the kettle. Else: if nothing went wrong, add the tea leaves. Finally: switch off the stove, every time.
+  </div>
+  <p>You will also write your own error names, such as <code>MalformedRecord</code> and <code>MissingSource</code>, so the program can tell the kinds apart. That takes only a few lines each.</p>
+  <div class="donebar"><button class="donebtn" data-done="s5" aria-pressed="false">Mark as done</button></div>
+</section>
+
+<!-- ================= 6 COUNTING ================= -->
+<section class="card" id="s6">
+  <h2><span class="num">6.</span> Count every row, and name every batch</h2>
+  <p>A <strong>quarantine</strong> is a list of the rows the program refused. Each entry keeps the file, the line number, a category, a reason and the row exactly as it was read. A person opens the file, goes to that line and fixes it. It is a worklist, not a bin.</p>
+  <p>Then the program does the sums. Every row read must end up in one of two places, so <strong>accepted plus quarantined must equal the rows in the file</strong>. It also halts the whole batch if more than 5 percent of a file is quarantined, because that usually means the file itself is broken.</p>
+  <h3>Try it: does the batch pass?</h3>
+  <p>Click a file to see what the program does.</p>
+  <div class="chips" id="bookChips">
+    <button class="chip" data-i="0" aria-pressed="false">100 rows: 96 accepted, 4 quarantined</button>
+    <button class="chip" data-i="1" aria-pressed="false">100 rows: 90 accepted, 10 quarantined</button>
+    <button class="chip" data-i="2" aria-pressed="false">8 rows: 4 accepted, 3 quarantined</button>
+  </div>
+  <div class="readout" id="bookOut" aria-live="polite">Click a file above.</div>
+
+  <h3>A name that never changes</h3>
+  <p>Every batch gets a <strong>batch ID</strong> made from its files and settings, such as <code>B-1bf9b12a0999</code>. The same files and settings always give the same ID, so the program can tell when it has already finished a batch. Every run also gets its own <strong>attempt ID</strong>, and a log line. Run the same batch twice, and the second run says <em>reused finished batch; no work repeated</em>.</p>
+  <div class="callout ok"><strong class="t">Like a train booking reference</strong>
+    Check your booking ten times and it is still one reference, and still one seat. Each check is an attempt. The booking is one.
+  </div>
+  <div class="donebar"><button class="donebtn" data-done="s6" aria-pressed="false">Mark as done</button></div>
+</section>
+
+<!-- ================= 7 RETRIES AND MODEL ================= -->
+<section class="card" id="s7">
+  <h2><span class="num">7.</span> Retries, and a model that may not answer</h2>
+  <h3>Some failures fix themselves</h3>
+  <p>A server is busy for a moment, or a message is lost. Waiting and trying again often works. But a retry needs a <strong>limit</strong> and a <strong>wait that grows</strong>, or it makes a busy service busier. Each wait is a random time up to a ceiling that doubles after every failure and stops at a cap. The randomness is called <strong>jitter</strong>, and it stops everyone retrying at the same second.</p>
+  <div class="tablewrap">
+  <table>
+    <tr><th>Attempt</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th></tr>
+    <tr><td>Longest wait, in seconds</td><td>0.5</td><td>1</td><td>2</td><td>4</td><td>8</td><td>8</td></tr>
+  </table>
+  </div>
+  <p>And one question decides everything: <em>could a later try succeed?</em> A timeout, a rate limit or a server error: yes. A missing key: never.</p>
+
+  <h3>The rules for the model in Class 4</h3>
+  <div class="cardgrid">
+    <div class="panel"><h4>Never invent an answer</h4><p>If the model cannot answer, the suggestion says <code>UNAVAILABLE</code> and why. It never falls back to a recorded answer, because a recorded answer is test data.</p></div>
+    <div class="panel"><h4>The facts stay</h4><p>Whether a case needs attention comes from the rules. A failed model call never removes a flagged case from the report.</p></div>
+    <div class="panel"><h4>One retry layer only</h4><p>If two layers each retried three times, one failure would become nine calls. So only our own retry code retries.</p></div>
+    <div class="panel"><h4>Cache good answers only</h4><p>A good reply can be reused later. A timeout is never saved, or it would be replayed as if it were true.</p></div>
+  </div>
+  <div class="callout warn"><strong class="t">Never paste a key into chat</strong>
+    The rule from Class 3 still holds. You can do the whole class without a key, because every failure is simulated.
+  </div>
+  <div class="donebar"><button class="donebtn" data-done="s7" aria-pressed="false">Mark as done</button></div>
+</section>
+
+<!-- ================= 8 CHECK ================= -->
+<section class="card" id="s8">
+  <h2><span class="num">8.</span> Check yourself</h2>
+  <p>Five quick questions. They are not graded. They show you what to look at again. You can retry as often as you like.</p>
+  <div class="quiz" id="finalQuiz"></div>
+  <div class="score" id="finalScore" aria-live="polite"></div>
+
+  <h3>Before Class 4: your checklist</h3>
+  <ul class="tasks" id="finalChecks">
+    <li data-check="1"><span class="ck"></span>Python 3.11 or newer is installed, and the version command shows it</li>
+    <li data-check="2"><span class="ck"></span>My Class 3 project prints <code>4 of 7 cases need attention</code>, and <code>pytest</code> shows <code>26 passed</code></li>
+    <li data-check="3"><span class="ck"></span>I downloaded the Starter Files for Class 4 and unzipped them</li>
+    <li data-check="4"><span class="ck"></span>I can name the four kinds of failure in my own words</li>
+    <li data-check="5"><span class="ck"></span>I can say what a quarantine is and why a program should not guess</li>
+    <li data-check="6"><span class="ck"></span>I tried the sorting game and answered the quiz</li>
+    <li data-check="7"><span class="ck"></span>I know which errors are worth retrying, and which are not</li>
+  </ul>
+  <p class="small muted">Click an item to tick it. Your ticks are saved in this browser only.</p>
+
+  <div class="callout ok"><strong class="t">What happens next</strong>
+    In Class 4 you will name the kinds of failure, read each field carefully, quarantine bad rows, halt a bad batch, give batches stable IDs, make reruns safe, add bounded retries, give every model answer a status, and write eight checks. Send your instructor a note if any step above did not work.
+  </div>
+  <div class="donebar"><button class="donebtn" data-done="s8" aria-pressed="false">Mark as done</button></div>
+</section>
+
+<footer>FDE Module 2 &middot; Class 4 pre-read</footer>
+</div>
+<script>
+(function () {
+  'use strict';
+  function $(s, r) { return (r || document).querySelector(s); }
+  function $$(s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
+  function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+  /* ---------- tabs ---------- */
+  $$('.tabs').forEach(function (box) {
+    var btns = $$('[role="tab"]', box), panels = $$('.tabpanel', box);
+    function show(name) {
+      btns.forEach(function (b) { b.setAttribute('aria-selected', b.dataset.tab === name ? 'true' : 'false'); });
+      panels.forEach(function (p) { p.classList.toggle('active', p.dataset.panel === name); });
+    }
+    btns.forEach(function (b) { b.addEventListener('click', function () { show(b.dataset.tab); }); });
+    box._show = show;
+  });
+  try {
+    var plat = ((navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || navigator.userAgent || '').toLowerCase();
+    var b1 = $('[data-tabs="pyver"]');
+    if (b1 && b1._show) b1._show(plat.indexOf('win') > -1 ? 'win' : 'mac');
+  } catch (e) { /* ignore */ }
+
+  /* ---------- copy buttons ---------- */
+  $$('.codeblock').forEach(function (cb) {
+    var btn = $('.copy', cb), pre = $('pre', cb);
+    if (!btn || !pre) return;
+    btn.addEventListener('click', function () {
+      var text = pre.textContent;
+      function ok() { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy'; }, 1400); }
+      function fallback() {
+        var ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); ok(); } catch (e2) { btn.textContent = 'Select and copy'; }
+        document.body.removeChild(ta);
+      }
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(ok, fallback); }
+        else { fallback(); }
+      } catch (e) { fallback(); }
+    });
+  });
+
+  /* ---------- progress (per viewer, saved in this browser only) ---------- */
+  var done = {};
+  try { done = JSON.parse(localStorage.getItem('c4preread') || '{}') || {}; } catch (e) { done = {}; }
+  function save() { try { localStorage.setItem('c4preread', JSON.stringify(done)); } catch (e) { /* ignore */ } }
+  function refresh() {
+    var ids = ['s1', 's2', 's3', 's4', 's5', 's6', 's7', 's8'], n = 0;
+    ids.forEach(function (id) {
+      var on = !!done[id]; if (on) n++;
+      $$('[data-done="' + id + '"]').forEach(function (b) { b.setAttribute('aria-pressed', on ? 'true' : 'false'); b.textContent = on ? 'Done ✓' : 'Mark as done'; });
+      var a = $('nav a[data-s="' + id + '"]'); if (a) a.classList.toggle('done', on);
+    });
+    $('#bar').style.width = Math.round(n / ids.length * 100) + '%';
+    $('#pct').textContent = 'Progress: ' + n + ' of ' + ids.length + ' sections marked done';
+  }
+  $$('[data-done]').forEach(function (b) {
+    b.addEventListener('click', function () { done[b.dataset.done] = !done[b.dataset.done]; save(); refresh(); });
+  });
+  try { refresh(); } catch (e) { /* ignore */ }
+
+  /* ---------- generic chip readout ---------- */
+  function chipReadout(chipSel, outSel, data, fixLabel) {
+    $$(chipSel).forEach(function (c) {
+      c.addEventListener('click', function () {
+        $$(chipSel).forEach(function (x) { x.setAttribute('aria-pressed', 'false'); });
+        c.setAttribute('aria-pressed', 'true');
+        var h = data[+c.dataset.i];
+        $(outSel).innerHTML = '<strong>' + h[0] + '</strong><br>' + h[1] + '<br><strong style="color:var(--ok)">' + fixLabel + '</strong> ' + h[2];
+      });
+    });
+  }
+  chipReadout('#hideChips .chip', '#hideOut', [
+    ['A date that means two things', '<code>07/03/2025</code> could be 7 March or 3 July. A program that guesses puts a made-up date into the report, and nothing shows it was a guess.', 'Accept only <code>YYYY-MM-DD</code>. Anything else goes to quarantine with the reason "not a valid date".'],
+    ['A row that vanishes', 'A loop that skips a bad row without a word still finishes happily. The report is short by one, and nobody knows which one.', 'Every row ends up accepted or quarantined, and a check proves accepted plus quarantined equals the rows read.'],
+    ['The same case twice', 'Two rows say <code>C-3004</code>. If both are counted, the report shows one case twice, and the totals are wrong.', 'A duplicate policy: <code>first_wins</code> keeps the first and quarantines the second, or <code>reject_batch</code> stops the run.'],
+    ['A run started twice', 'Someone presses run again after a crash. Work is repeated, lines are doubled, and a model is paid twice for the same answer.', 'A batch ID from the files and settings, a completion marker written last, and a rerun that sees a finished batch and does nothing.'],
+    ['A model that is too slow', 'The service times out. A program that makes up an answer, or quietly drops the case, has hidden a failure.', 'A bounded retry, then a status of UNAVAILABLE with the reason. The facts from the rules stay in the report.']
+  ], 'The fix:');
+
+  /* ---------- section 4: folder explorer ---------- */
+  var DIRS = {
+    root: ['The whole project', 'The Class 3 layout stays. Class 4 adds a few files to it, and each new file has one job. Click a folder to see what changes.'],
+    src: ['src/meridian_workbench/', 'Five new files. <code>errors.py</code> names the kinds of failure. <code>parsing.py</code> reads each field carefully. <code>reconcile.py</code> counts rows and checks the gates. <code>batch.py</code> makes the batch ID and attempt ID. <code>retry.py</code> holds the bounded retry. The rules file still has no model code in it.'],
+    tests: ['tests/', 'New checks for failures. Eight of them, in <code>test_failures.py</code> and <code>test_rerun.py</code>, protect promises such as "a bad date is quarantined" and "a rerun does not duplicate". You will finish them in class.'],
+    fixtures: ['fixtures/', 'Small input files used by the checks. The failure file has 8 rows on purpose: one bad status, one ambiguous date, one duplicate case and one impossible date.'],
+    golden: ['golden/', 'The golden set grows from 10 to 12 cases. The two new ones are an AMBIGUOUS case and an INSUFFICIENT case, where the right answer is to say the model cannot tell.'],
+    outputs: ['outputs/', 'What a run leaves behind: <code>quarantine.csv</code>, the report, <code>attempts.log</code> (add-only, one line per attempt) and <code>summary.json</code>, which is written last as proof the batch finished.'],
+    files: ['config/settings.toml and docs/', 'The settings file gets two new sections: <code>[intake]</code> with the 5% limit and the duplicate policy, and <code>[retry]</code> with the attempts, base wait and cap. The docs folder gets an incident update template.']
+  };
+  function showDir(k) {
+    var d = DIRS[k];
+    $('#treeTitle').textContent = d[0];
+    $('#treeText').innerHTML = '<p style="margin:0">' + d[1] + '</p>';
+  }
+  $$('#treeBox button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      $$('#treeBox button').forEach(function (x) { x.setAttribute('aria-pressed', 'false'); });
+      b.setAttribute('aria-pressed', 'true');
+      showDir(b.dataset.d);
+    });
+  });
+  showDir('root');
+
+  /* ---------- sorter ---------- */
+  function sorter(el, bins, items, doneMsg) {
+    var sel = null, left = items.length, wrong = 0;
+    var pool = document.createElement('div'); pool.className = 'pool';
+    var hint = document.createElement('p'); hint.className = 'hint';
+    var grid = document.createElement('div'); grid.className = 'bins';
+    var chips = [];
+    items.forEach(function (it) {
+      var c = document.createElement('button'); c.className = 'chip'; c.textContent = it.t; c.setAttribute('aria-pressed', 'false');
+      c.addEventListener('click', function () {
+        chips.forEach(function (x) { x.classList.remove('sel'); x.setAttribute('aria-pressed', 'false'); });
+        sel = it; c.classList.add('sel'); c.setAttribute('aria-pressed', 'true');
+        hint.className = 'hint'; hint.textContent = 'Now click the bin for this item.';
+      });
+      it.chip = c; chips.push(c); pool.appendChild(c);
+    });
+    bins.forEach(function (b) {
+      var d = document.createElement('button'); d.className = 'bin';
+      d.innerHTML = '<b>' + esc(b.label) + '</b><span class="why">' + esc(b.sub || '') + '</span><span class="placed"></span>';
+      d.addEventListener('click', function () {
+        if (!sel) { hint.className = 'hint'; hint.textContent = 'Click an item first, then a bin.'; return; }
+        var it = sel;
+        if (it.bin === b.k) {
+          var s = document.createElement('span'); s.textContent = it.t; $('.placed', d).appendChild(s);
+          pool.removeChild(it.chip); sel = null; left--;
+          hint.className = 'hint good'; hint.textContent = 'Correct. ' + it.why;
+          if (!left) {
+            var e = document.createElement('span'); e.className = 'empty'; e.textContent = 'All sorted.'; pool.appendChild(e);
+            hint.textContent = (wrong === 0 ? 'Perfect, with no mistakes. ' : 'All sorted, with ' + wrong + ' wrong ' + (wrong === 1 ? 'try' : 'tries') + '. ') + (doneMsg || '');
+          }
+        } else {
+          wrong++; d.classList.add('flash'); setTimeout(function () { d.classList.remove('flash'); }, 500);
+          hint.className = 'hint bad'; hint.textContent = 'Not quite. ' + (it.hint || 'Think about what went wrong.');
+        }
+      });
+      grid.appendChild(d);
+    });
+    el.appendChild(pool); el.appendChild(hint); el.appendChild(grid);
+  }
+  sorter($('#sortKinds'), [
+    { k: 'row', label: 'Bad record', sub: 'one row is wrong', },
+    { k: 'rule', label: 'Broken rule', sub: 'each row is fine alone' },
+    { k: 'source', label: 'Missing source', sub: 'a file is absent or unreadable' },
+    { k: 'service', label: 'Service failure', sub: 'an outside call fails' }
+  ], [
+    { t: 'promised_date is 2025-02-30', bin: 'row', why: 'There is no 30 February, so this one row is invalid. It goes to quarantine.', hint: 'Is the problem inside a single row?' },
+    { t: 'status says RETURNED, which is not allowed', bin: 'row', why: 'The value is not on the allowed list. One row is bad.', hint: 'Look at one row alone.' },
+    { t: 'C-3004 appears on two rows', bin: 'rule', why: 'Each row looks fine alone. The rule "one row per case" is broken.', hint: 'Each row is fine by itself. What breaks?' },
+    { t: 'cases.csv was not delivered', bin: 'source', why: 'Without a required file there is nothing to count, so the run stops with a clear message.', hint: 'Is a whole file missing?' },
+    { t: 'the model call times out', bin: 'service', why: 'The failure is outside our program, and a retry may help.', hint: 'Who failed: our data or an outside service?' },
+    { t: 'the service says "too many requests"', bin: 'service', why: 'A rate limit is an outside failure that often clears after a wait.', hint: 'Who is complaining, our file or a service?' },
+    { t: 'orders.csv cannot be opened', bin: 'source', why: 'An unreadable file is a source problem, not a row problem.', hint: 'Is the whole file the problem?' }
+  ], 'Row, rule, source or service: each gets a planned outcome.');
+
+  /* ---------- section 6: does the batch pass? ---------- */
+  chipReadout('#bookChips .chip', '#bookOut', [
+    ['100 rows: 96 accepted, 4 quarantined', '96 + 4 = 100, so every row is counted. 4 percent is under the 5 percent limit.', 'The batch passes. The 4 quarantined rows wait for a person to fix them.'],
+    ['100 rows: 90 accepted, 10 quarantined', '90 + 10 = 100, so the count balances. But 10 percent is over the 5 percent limit.', 'The batch halts. A file this broken is usually the wrong file. The run prints <code>HALTED</code> and exits with code 2.'],
+    ['8 rows: 4 accepted, 3 quarantined', '4 + 3 = 7, but the file had 8 rows. One row is neither accepted nor quarantined.', 'The reconciliation check fails and the run halts. A silent loss is the worst failure.']
+  ], 'Result:');
+
+  /* ---------- quiz ---------- */
+  function quiz(el, items, scoreEl) {
+    var answered = 0, right = 0;
+    items.forEach(function (it, qi) {
+      var q = document.createElement('div'); q.className = 'q';
+      var p = document.createElement('p'); p.className = 'qt'; p.textContent = (qi + 1) + '. ' + it.q; q.appendChild(p);
+      var fb = document.createElement('div'); fb.className = 'fb';
+      var btns = [];
+      it.o.forEach(function (txt, oi) {
+        var b = document.createElement('button'); b.className = 'opt'; b.textContent = txt; btns.push(b);
+        b.addEventListener('click', function () {
+          if (btns.some(function (x) { return x.disabled; })) return;
+          btns.forEach(function (x) { x.disabled = true; });
+          answered++;
+          if (oi === it.a) { b.classList.add('right'); right++; fb.textContent = 'Correct. ' + it.e; fb.style.color = 'var(--ok)'; }
+          else { b.classList.add('wrong'); btns[it.a].classList.add('right'); fb.textContent = 'Not quite. ' + it.e; fb.style.color = 'var(--bad)'; }
+          if (scoreEl && answered === items.length) {
+            scoreEl.textContent = 'You got ' + right + ' of ' + items.length + '. ' + (right === items.length ? 'Great work.' : 'Re-read the sections for any you missed, then reload the page to try again.');
+          }
+        });
+        q.appendChild(b);
+      });
+      q.appendChild(fb); el.appendChild(q);
+    });
+  }
+  quiz($('#finalQuiz'), [
+    { q: 'A row has the date 07/03/2025. What should a careful program do?', o: ['Guess day-first and carry on', 'Guess month-first and carry on', 'Quarantine it with the reason "not a valid date"', 'Delete it quietly'], a: 2, e: 'A guess looks like a fact in the report. Setting the row aside with a reason is honest and fixable.' },
+    { q: 'In try/except/else/finally, which part runs every time?', o: ['try', 'except', 'else', 'finally'], a: 3, e: 'finally runs whether or not there was an error, like switching off the stove.' },
+    { q: 'A file has 100 rows. 90 are accepted and 10 quarantined. What happens?', o: ['It passes, because the count balances', 'It halts, because 10 percent is over the 5 percent limit', 'It is silently retried', 'The 10 rows are accepted anyway'], a: 1, e: 'The count balances, but the quality gate halts a file that broken.' },
+    { q: 'Which failure is worth retrying?', o: ['A required file is missing', 'A date is impossible', 'The model call times out', 'A status is not on the allowed list'], a: 2, e: 'A timeout may clear on its own. The others will fail the same way every time.' },
+    { q: 'The model call still fails after the last retry. What should the suggestion say?', o: ['A recorded answer from a test file', 'A confident guess', 'UNAVAILABLE, with the reason', 'Nothing, and the case is dropped from the report'], a: 2, e: 'Never invent an answer. Say it is unavailable and keep the facts from the rules.' }
+  ], $('#finalScore'));
+
+  /* checklist: tick, and remember in this browser */
+  var checkDone = {};
+  try { checkDone = JSON.parse(localStorage.getItem('c4preread-checks') || '{}') || {}; } catch (e) { checkDone = {}; }
+  $$('#finalChecks li').forEach(function (li) {
+    var ck = $('.ck', li);
+    var tx = document.createElement('span'); tx.className = 'tx';
+    while (ck.nextSibling) tx.appendChild(ck.nextSibling);
+    li.appendChild(tx);
+    li.style.cursor = 'pointer';
+    function paint(on) { li.classList.toggle('done', on); ck.textContent = on ? '✓' : ''; }
+    paint(!!checkDone[li.dataset.check]);
+    li.addEventListener('click', function () {
+      checkDone[li.dataset.check] = !checkDone[li.dataset.check];
+      paint(!!checkDone[li.dataset.check]);
+      try { localStorage.setItem('c4preread-checks', JSON.stringify(checkDone)); } catch (e) { /* ignore */ }
+    });
+  });
+
+  /* nav highlight while scrolling */
+  try {
+    var secs = $$('section.card'), links = $$('nav a');
+    window.addEventListener('scroll', function () {
+      var cur = secs[0].id;
+      secs.forEach(function (s) { if (s.getBoundingClientRect().top < 160) cur = s.id; });
+      links.forEach(function (a) { a.style.fontWeight = a.dataset.s === cur ? '700' : '400'; });
+    }, { passive: true });
+  } catch (e) { /* ignore */ }
+})();
+</script>
+</body>
+</html>
